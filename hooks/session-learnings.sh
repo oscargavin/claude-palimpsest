@@ -450,7 +450,7 @@ Today's date: $(date +%Y-%m-%d)"
   if [ "$(wc -l < "$DEBUG_LOG" 2>/dev/null)" -gt 100 ]; then
     tail -50 "$DEBUG_LOG" > "$DEBUG_LOG.tmp" && mv "$DEBUG_LOG.tmp" "$DEBUG_LOG"
   fi
-) < /dev/null &
+) </dev/null >/dev/null 2>&1 &
 disown
 
 exit 0
