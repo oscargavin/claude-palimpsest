@@ -21,7 +21,7 @@ Claude Code loses context between sessions. You correct the same mistakes, re-ex
 /plugin install https://github.com/oscargavin/claude-palimpsest
 ```
 
-All hooks register automatically. Start a new session to activate.
+Then run `/palimpsest-setup` in your first session to patch SessionStart and SessionEnd hooks (workaround for a [known plugin bug](https://github.com/anthropics/claude-code/issues/27145)). Friction capture works immediately without this step.
 
 ### Shell script (fallback)
 
