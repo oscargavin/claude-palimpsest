@@ -1,0 +1,113 @@
+{
+  "description": "Friction capture + learning system hooks",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-start.sh'",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-learnings.sh'",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/friction-capture.sh'",
+            "timeout": 1000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/friction-capture.sh'",
+            "timeout": 1000
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/friction-capture.sh'",
+            "timeout": 1000
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/friction-capture.sh'",
+            "timeout": 1000
+          }
+        ]
+      },
+      {
+        "matcher": "Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/friction-capture.sh'",
+            "timeout": 1000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/enforce-tools.sh'",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/task-verify.sh'",
+            "timeout": 120000
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notify-voice.sh'",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}

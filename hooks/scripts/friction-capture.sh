@@ -1,8 +1,28 @@
 #!/bin/bash
 # PostToolUse friction capture — detect mistakes as they happen
 # Fast (~5ms): single jq call + file append. No LLM calls.
+# Also bootstraps session setup if SessionStart hook didn't fire (plugin env var bug #27145)
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 SCRATCH="$HOME/.claude/scratch"
+
+# Bootstrap: run session setup once per session if SessionStart didn't fire
+# Guard file is cleared by session-start.sh; if it doesn't exist, setup hasn't run
+if [ ! -f "$SCRATCH/.session-active" ]; then
+  mkdir -p "$SCRATCH"
+  mkdir -p "$HOME/.claude/knowledge/fw"
+  mkdir -p "$HOME/.claude/knowledge/ref"
+  mkdir -p "$HOME/.claude/rules"
+  for tmpl in learnings.md handoff.md learned.md codebase.md; do
+    [ ! -f "$HOME/.claude/rules/$tmpl" ] && [ -f "$PLUGIN_ROOT/templates/$tmpl" ] && \
+      cp "$PLUGIN_ROOT/templates/$tmpl" "$HOME/.claude/rules/$tmpl"
+  done
+  rm -f "$SCRATCH"/friction-*
+  touch "$SCRATCH/.session-active"
+fi
+
 mkdir -p "$SCRATCH"
 
 INPUT=$(cat)

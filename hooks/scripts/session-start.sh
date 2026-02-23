@@ -3,20 +3,37 @@
 # Outputs relevant knowledge files as context for Claude Code
 # Performance target: <100ms (filesystem checks only, no network)
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 INPUT=$(cat)
 CWD=$(echo "$INPUT" | jq -r '.cwd // empty')
 [ -z "$CWD" ] && CWD="$PWD"
 
-# Clear friction scratch for new session
+# Ensure required directories exist (idempotent)
 mkdir -p "$HOME/.claude/scratch"
+mkdir -p "$HOME/.claude/knowledge/fw"
+mkdir -p "$HOME/.claude/knowledge/ref"
+mkdir -p "$HOME/.claude/rules"
+
+# Copy templates if they don't exist
+for tmpl in learnings.md handoff.md learned.md codebase.md; do
+  [ ! -f "$HOME/.claude/rules/$tmpl" ] && [ -f "$PLUGIN_ROOT/templates/$tmpl" ] && \
+    cp "$PLUGIN_ROOT/templates/$tmpl" "$HOME/.claude/rules/$tmpl"
+done
+
+# Clear friction scratch for new session
 rm -f "$HOME/.claude/scratch"/friction-*
+
+# Signal that session setup ran (checked by friction-capture bootstrap)
+touch "$HOME/.claude/scratch/.session-active"
 
 KNOWLEDGE_DIR="$HOME/.claude/knowledge/fw"
 RELEVANT=()
 AVAILABLE=()
 
 # --- Find project root ---
-source "$HOME/.claude/hooks/lib-project-root.sh"
+source "$SCRIPT_DIR/lib-project-root.sh"
 find_project_root "$CWD"
 
 # --- Helper: add to relevant if file exists ---

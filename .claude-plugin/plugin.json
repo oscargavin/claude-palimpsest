@@ -1,0 +1,10 @@
+{
+  "name": "claude-palimpsest",
+  "version": "1.0.0",
+  "description": "A learning system that captures mistakes during coding sessions and turns them into persistent knowledge",
+  "author": { "name": "Oscar Gavin" },
+  "homepage": "https://github.com/oscargavin/claude-palimpsest",
+  "repository": "https://github.com/oscargavin/claude-palimpsest",
+  "license": "MIT",
+  "keywords": ["learning", "memory", "friction", "hooks", "knowledge"]
+}

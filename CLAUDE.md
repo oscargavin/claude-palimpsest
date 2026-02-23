@@ -4,13 +4,15 @@ This repo contains a learning system for Claude Code. It captures mistakes durin
 
 ## Installing
 
-Run `./install.sh` from the repo root. Use `--all` for the full set including enforce-tools and task-verify.
+**Plugin (recommended):** `/plugin install https://github.com/oscargavin/claude-palimpsest`
+
+**Shell script (fallback):** `./install.sh` from the repo root. Use `--all` for the full set including enforce-tools and task-verify.
 
 ### Manual install (fallback)
 
-If `install.sh` doesn't work:
+If neither method works:
 
-1. Copy `hooks/` to `~/.claude/hooks/` and `chmod +x` each file
+1. Copy `hooks/scripts/` to `~/.claude/hooks/` and `chmod +x` each file
 2. Copy `sounds/` to `~/.claude/sounds/`
 3. Create dirs: `~/.claude/scratch/`, `~/.claude/knowledge/fw/`, `~/.claude/knowledge/ref/`
 4. Copy `templates/*.md` to `~/.claude/rules/` (skip files that already exist)
@@ -18,14 +20,19 @@ If `install.sh` doesn't work:
 
 ## Uninstalling
 
-Run `./uninstall.sh` — removes hooks and sounds but preserves learnings and knowledge.
+**Plugin:** Disable or remove in Claude Code settings.
+
+**Shell:** `./uninstall.sh` — removes hooks and sounds but preserves learnings and knowledge.
 
 ## Structure
 
-- `hooks/` — shell scripts registered as Claude Code hooks
+- `.claude-plugin/` — plugin metadata for Claude Code's plugin system
+- `hooks/hooks.json` — hook registrations (auto-loaded by plugin system)
+- `hooks/scripts/` — shell scripts registered as Claude Code hooks
 - `rules/` — optional workflow rules (01-sail.md)
 - `sounds/` — notification sounds
 - `templates/` — starter files for learnings, handoff, codebase, learned
+- `skills/` — optional skills (palimpsest-setup)
 
 ## Development
 
@@ -38,3 +45,5 @@ Key hook events:
 - `Notification` → notify-voice.sh
 - `PreToolUse` → enforce-tools.sh (receives tool_input.command)
 - `TaskCompleted` → task-verify.sh (receives task_subject, task_description, cwd)
+
+Scripts derive their own location via `BASH_SOURCE[0]` and `PLUGIN_ROOT` for cross-references (sibling scripts, sounds, templates). No hardcoded `~/.claude/` paths for plugin resources.

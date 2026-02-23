@@ -10,6 +10,9 @@
 # Graduation: project (3x)+ → rules/learned.md, framework (5x)+ → global learned.md
 # Pruning: graduated decay — (1x)+14d flag, (1x)+30d remove, (2x)+60d consolidate, (3x)+ never
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 INPUT=$(cat)
 
 # Debug logging
@@ -29,7 +32,7 @@ echo "$(date): Reason: $REASON" >> "$DEBUG_LOG"
 [ ! -f "$TRANSCRIPT_PATH" ] && echo "$(date): Skipped (transcript missing)" >> "$DEBUG_LOG" && exit 0
 
 # --- Dynamic project detection ---
-source "$HOME/.claude/hooks/lib-project-root.sh"
+source "$SCRIPT_DIR/lib-project-root.sh"
 find_project_root "$CWD"
 
 if [ -n "$PROJECT_ROOT" ]; then
@@ -371,8 +374,9 @@ play_sound() {
 # Notify when Tier 1 finishes, then check for Tier 2
 (
   while kill -0 $HAIKU_PID 2>/dev/null; do sleep 5; done
-  play_sound "$HOME/.claude/sounds/tap_02.wav"
+  play_sound "$PLUGIN_ROOT/sounds/tap_02.wav"
   rm -f "$CONDENSED"
+  rm -f "$HOME/.claude/scratch/.session-active"
 
   # --- Tier 2: Check files against budgets ---
   OVER_BUDGET=()

@@ -2,6 +2,8 @@
 # TaskCompleted hook: verify tests pass before task completion
 # Auto-detects test runner from project config files
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 INPUT=$(cat)
 
 TASK_SUBJECT=$(echo "$INPUT" | jq -r '.task_subject // empty')
@@ -11,7 +13,7 @@ CWD=$(echo "$INPUT" | jq -r '.cwd // empty')
 [ -z "$CWD" ] && exit 0
 
 # --- Find project root ---
-source "$HOME/.claude/hooks/lib-project-root.sh"
+source "$SCRIPT_DIR/lib-project-root.sh"
 find_project_root "$CWD"
 
 [ -z "$PROJECT_ROOT" ] && exit 0

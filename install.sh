@@ -87,9 +87,9 @@ fi
 install_hook() {
   local hook="$1"
   if $DRY_RUN; then
-    echo "  Would copy: hooks/$hook → $HOOKS_DIR/$hook"
+    echo "  Would copy: hooks/scripts/$hook → $HOOKS_DIR/$hook"
   else
-    cp "$SCRIPT_DIR/hooks/$hook" "$HOOKS_DIR/$hook"
+    cp "$SCRIPT_DIR/hooks/scripts/$hook" "$HOOKS_DIR/$hook"
     chmod +x "$HOOKS_DIR/$hook"
     ok "  $hook"
   fi
